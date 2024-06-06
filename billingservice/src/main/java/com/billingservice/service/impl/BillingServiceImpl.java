@@ -6,6 +6,7 @@ import com.billingservice.service.BillingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 @Service
@@ -16,6 +17,10 @@ public class BillingServiceImpl implements BillingService {
 
     @Override
     public Optional<Bill> getBill(String nic) {
-        return billingRepository.getBill(nic);
+        Optional<Bill> bill = billingRepository.getBill(nic);
+        if (bill.isPresent() && bill.get().getAmount() == null) {
+            bill.get().setAmount(BigDecimal.ZERO);
+        }
+        return bill;
     }
 }
